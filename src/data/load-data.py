@@ -8,7 +8,7 @@ from kagglehub import KaggleDatasetAdapter
 file_path = "Base.csv"
 
 # Load the latest version
-df = kagglehub.load_dataset(
+df = kagglehub.dataset_load(
     KaggleDatasetAdapter.PANDAS,
     "sgpjesus/bank-account-fraud-dataset-neurips-2022",
     file_path,
