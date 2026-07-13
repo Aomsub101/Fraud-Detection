@@ -1,0 +1,5 @@
+services:
+  fraud-detection:
+    build: .
+    volumes:
+      - ./output:/app/output
