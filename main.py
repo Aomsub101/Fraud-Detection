@@ -3,7 +3,7 @@ from src.data.clean_data import clean_data
 from src.data.preprocess import preprocess
 from src.data.data_split import data_split
 from src.features.features_engineer import features_engineer
-from src.models import xgboost
+from src.models.models import xgboost
 from src.services.metrics import evaluate_model
 
 
