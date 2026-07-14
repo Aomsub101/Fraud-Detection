@@ -8,6 +8,7 @@ from sklearn.metrics import PrecisionRecallDisplay
 import matplotlib.pyplot as plt
 import shap
 import json
+import os
 
 
 OUTPUT_PATH = "output/"
@@ -42,6 +43,7 @@ def save_pr_auc(model, X_test, y_test):
 
 
 def output_analysis(model, metrics, X_test, y_test):
+    os.makedirs("output", exist_ok=True)
     save_shap(model, X_test)
     save_json(metrics)
     save_pr_auc(model, X_test, y_test)
