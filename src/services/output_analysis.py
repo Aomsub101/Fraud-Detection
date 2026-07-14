@@ -16,9 +16,10 @@ def save_shap(model, X_test):
 
     # shap
     shap_values = model.shap(X_test)
-    shap.summary_plot(shap_values, X_test, feature_names=feature_names)
+    shap.summary_plot(shap_values, X_test, feature_names=feature_names, show=False)
     plt.tight_layout()
     plt.savefig(OUTPUT_PATH + f"shap_plot[{model.__name__}].png", dpi=300, bbox_inches="tight")
+    plt.close()
 
 
 def save_json(model, metrics):
@@ -35,6 +36,7 @@ def save_pr_auc(model, y_test, y_score):
     disp.ax_.set_title(f"PR Curve (Estimator) [{model.__name__}]")
     plt.tight_layout()
     plt.savefig(OUTPUT_PATH + f"pr_curve[{model.__name__}].png", dpi=300, bbox_inches="tight")
+    plt.close()
 
 
 def output_analysis(model, metrics, X_test, y_test, y_score):
