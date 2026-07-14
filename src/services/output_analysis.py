@@ -1,10 +1,3 @@
-"""
-Task
-1. Save SHAP plot to output/shap_plot.png
-2. Save metrics to output/results.json (and print as well)
-3. plot pr_auc_curve
-"""
-
 from sklearn.metrics import PrecisionRecallDisplay
 import matplotlib.pyplot as plt
 import shap
