@@ -6,6 +6,7 @@ from src.features.features_engineer import features_engineer
 from src.models.models import xgboost
 from src.services.metrics import evaluate_model
 from src.services.load_config import load_config
+from src.services.output_analysis import output_analysis
 
 
 def main():
@@ -42,10 +43,12 @@ def main():
 
     # predict
     y_pred = model.predict(X_test)
+    y_score = model.predict_proba(X_test)
 
     # evaluate
-    evaluate_model(y_test, y_pred)
+    metrics = evaluate_model(y_test, y_pred, y_score)
 
+    output_analysis(model, metrics)
 
 if __name__ == "__main__":
     main()
