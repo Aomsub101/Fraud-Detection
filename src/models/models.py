@@ -34,46 +34,52 @@ class BaseModel(ABC):
         logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
         return self.model.predict_proba(X)[:, 1]
 
+    @abstractmethod
+    def shap(self, X):
+        ...
+
+
+class TreeModel(BaseModel):
     def shap(self, X):
         logger.info("Computing SHAP values for %s", self.name)
         explainer = shap.TreeExplainer(self.model)
         return explainer.shap_values(X)
 
-    @property
-    def __name__(self):
-        return self.name
+
+class LinearModel(BaseModel):
+    def shap(self, X):
+        logger.info("Computing SHAP values for %s", self.name)
+        explainer = shap.LinearExplainer(self.model, X)
+        return explainer.shap_values(X)
 
 
-class XGBoostModel(BaseModel):
+class XGBoostModel(TreeModel):
     name = "xgboost"
 
     def _build_estimator(self, params):
         return XGBClassifier(**params)
 
 
-class CatBoostModel(BaseModel):
+class CatBoostModel(TreeModel):
     name = "catboost"
 
     def _build_estimator(self, params):
         return CatBoostClassifier(**params)
 
 
-class LightGBMModel(BaseModel):
+class LightGBMModel(TreeModel):
     name = "lightgbm"
 
     def _build_estimator(self, params):
         return LGBMClassifier(**params)
 
 
-class LogRegModel(BaseModel):
+class LogRegModel(LinearModel):
     name = "log_reg"
 
     def _build_estimator(self, params):
         return LogisticRegression(**params)
 
-    def shap(self, X):
-        logger.info("Computing SHAP values for %s", self.name)
-        return shap.LinearExplainer(self.model, X).shap_values(X)
 
 
 MODELS = {cls.name: cls for cls in (XGBoostModel, CatBoostModel, LightGBMModel, LogRegModel)}
