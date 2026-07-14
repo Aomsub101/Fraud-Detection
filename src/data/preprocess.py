@@ -1,5 +1,9 @@
+import logging
+
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 MISSING_SENTINEL_COLS = [
@@ -39,6 +43,7 @@ STANDARDIZE_EXCLUDE = {"fraud_bool", "month", *FE_HANDLED_COLS}
 
 
 def preprocess(df):
+    logger.info("Preprocessing %d rows", len(df))
     df_prep = df.copy()
 
     # Statistics (shift, median) are fit on the training months (0-5) only and
@@ -79,7 +84,10 @@ def preprocess(df):
         if std > 0:
             df_prep[col] = (df_prep[col] - mean) / std
 
+    logger.info("Standardized %d continuous columns", len(standardize_cols))
+
     # 5. One-hot encode the categorical columns and drop the originals.
     df_prep = pd.get_dummies(df_prep, columns=CATEGORICAL_COLS, dtype=int)
 
+    logger.info("Preprocess complete: %s -> %s", df.shape, df_prep.shape)
     return df_prep

@@ -7,9 +7,16 @@ from src.models.models import build_model
 from src.services.metrics import evaluate_model
 from src.services.load_config import load_config
 from src.services.output_analysis import output_analysis
+from src.services.logging_config import setup_logging
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def main():
+    setup_logging()
+    logger.info("=== Fraud detection pipeline started ===")
+
     # load config
     config = load_config()
 
@@ -50,6 +57,8 @@ def main():
     metrics = evaluate_model(y_test, y_pred, y_score)
 
     output_analysis(model, metrics=metrics, X_test=X_test, y_test=y_test, y_score=y_score)
+
+    logger.info("=== Pipeline complete ===")
 
 
 if __name__ == "__main__":

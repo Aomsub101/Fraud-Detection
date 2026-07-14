@@ -3,7 +3,10 @@ from catboost import CatBoostClassifier
 from lightgbm import LGBMClassifier
 from sklearn.linear_model import LogisticRegression
 from abc import ABC, abstractmethod
+import logging
 import shap
+
+logger = logging.getLogger(__name__)
 
 
 class BaseModel(ABC):
@@ -18,16 +21,21 @@ class BaseModel(ABC):
         """Return the underlying estimator"""
 
     def fit(self, X, y):
+        logger.info("Training %s on %d samples", self.name, len(X))
         self.model.fit(X, y)
+        logger.info("Finished training %s", self.name)
         return self
 
     def predict(self, X):
+        logger.info("Predicting labels with %s on %d samples", self.name, len(X))
         return self.model.predict(X)
 
     def predict_proba(self, X):
+        logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
         return self.model.predict_proba(X)[:, 1]
 
     def shap(self, X):
+        logger.info("Computing SHAP values for %s", self.name)
         explainer = shap.TreeExplainer(self.model)
         return explainer.shap_values(X)
 
@@ -64,6 +72,7 @@ class LogRegModel(BaseModel):
         return LogisticRegression(**params)
 
     def shap(self, X):
+        logger.info("Computing SHAP values for %s", self.name)
         return shap.LinearExplainer(self.model, X).shap_values(X)
 
 
@@ -71,4 +80,5 @@ MODELS = {cls.name: cls for cls in (XGBoostModel, CatBoostModel, LightGBMModel, 
 
 
 def build_model(name, params=None):
+    logger.info("Building model '%s' with params %s", name, params)
     return MODELS[name](params)

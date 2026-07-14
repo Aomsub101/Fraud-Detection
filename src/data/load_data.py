@@ -1,8 +1,11 @@
 # Install dependencies as needed:
 # pip install kagglehub[pandas-datasets]
 import kagglehub
+import logging
 import os
 from kagglehub import KaggleDatasetAdapter
+
+logger = logging.getLogger(__name__)
 
 
 def load_data():
@@ -10,6 +13,7 @@ def load_data():
     file_path = "Base.csv"
 
     # Load the latest version
+    logger.info("Loading '%s' from kagglehub...", file_path)
     df = kagglehub.dataset_load(
         KaggleDatasetAdapter.PANDAS,
         "sgpjesus/bank-account-fraud-dataset-neurips-2022",
@@ -19,7 +23,9 @@ def load_data():
         # documenation for more information:
         # https://github.com/Kaggle/kagglehub/blob/main/README.md#kaggledatasetadapterpandas
     )
+    logger.info("Loaded data: %d rows, %d columns", df.shape[0], df.shape[1])
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/Base.csv", index=False)
+    logger.info("Saved raw data to data/Base.csv")
 
     return df
