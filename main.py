@@ -3,7 +3,7 @@ from src.data.clean_data import clean_data
 from src.data.preprocess import preprocess
 from src.data.data_split import data_split
 from src.features.features_engineer import features_engineer
-from src.models.models import xgboost
+from src.models.models import build_model
 from src.services.metrics import evaluate_model
 from src.services.load_config import load_config
 from src.services.output_analysis import output_analysis
@@ -33,10 +33,11 @@ def main():
         "xgboost": {},
         "catboost": {},
         "lightgbm": {},
+        "log_reg": {},
     }
 
     model_name = config["model"]
-    model = xgboost(params=params[model_name])
+    model = build_model(name=model_name, params=params[model_name])
 
     # train
     model.fit(X_train, y_train)
@@ -48,7 +49,8 @@ def main():
     # evaluate
     metrics = evaluate_model(y_test, y_pred, y_score)
 
-    output_analysis(model, metrics)
+    output_analysis(model, metrics=metrics, X_test=X_test, y_test=y_test, y_score=y_score)
+
 
 if __name__ == "__main__":
     main()
