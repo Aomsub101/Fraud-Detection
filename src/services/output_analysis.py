@@ -27,8 +27,6 @@ def save_json(model, metrics):
     with open(OUTPUT_PATH + f"metrics[{model.__name__}].json", "w") as file:
         json.dump(metrics, file, indent=4)
 
-    print(metrics)
-
 
 def save_pr_auc(model, y_test, y_score):
     logger.info("Saving PR curve for %s", model.__name__)
