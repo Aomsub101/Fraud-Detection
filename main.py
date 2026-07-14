@@ -5,9 +5,13 @@ from src.data.data_split import data_split
 from src.features.features_engineer import features_engineer
 from src.models.models import xgboost
 from src.services.metrics import evaluate_model
+from src.services.load_config import load_config
 
 
 def main():
+    # load config
+    config = load_config()
+
     # load data
     df = load_data()
 
@@ -24,11 +28,14 @@ def main():
     X_train, X_test, y_train, y_test = data_split(df_feat)
 
     # model
-    # params = {
+    params = {
+        "xgboost": {},
+        "catboost": {},
+        "lightgbm": {},
+    }
 
-    # }
-
-    model = xgboost()
+    model_name = config["model"]
+    model = xgboost(params=params[model_name])
 
     # train
     model.fit(X_train, y_train)
@@ -40,5 +47,5 @@ def main():
     evaluate_model(y_test, y_pred)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     main()
