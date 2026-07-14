@@ -1,8 +1,7 @@
 import numpy as np
+import pandas as pd
 
-# Columns where -1 encodes a missing value (per the BAF data documentation).
-# credit_risk_score also contains -1, but there it is a legitimate score rather
-# than a missing marker, so it is intentionally excluded.
+
 MISSING_SENTINEL_COLS = [
     "prev_address_months_count",
     "current_address_months_count",
@@ -11,12 +10,6 @@ MISSING_SENTINEL_COLS = [
     "device_distinct_emails_8w",
 ]
 
-# Columns to log-transform with log1p (safe for zeros). The binary columns
-# foreign_request and has_other_cards were intentionally left out: log on a 0/1
-# column carries no information. prev_address_months_count and
-# device_distinct_emails_8w are also left out because feature engineering
-# one-hot-encodes them (via availability flags). intended_balcon_amount is
-# handled separately below because it has genuine negative values.
 LOG_COLS = [
     "days_since_request",
     "session_length_in_minutes",
@@ -26,13 +19,23 @@ LOG_COLS = [
     "proposed_credit_limit",
 ]
 
-# Missing values in these columns are left as NaN for feature engineering
-# (is_<col>_available flags), so they are NOT median-imputed here.
 FE_HANDLED_COLS = [
     "prev_address_months_count",
     "bank_months_count",
     "device_distinct_emails_8w",
 ]
+
+CATEGORICAL_COLS = [
+    "payment_type",
+    "employment_status",
+    "housing_status",
+    "source",
+    "device_os",
+]
+
+# Columns never standardized: the target, the split key (month, still needed by
+# data_split), and the columns handled in feature engineering.
+STANDARDIZE_EXCLUDE = {"fraud_bool", "month", *FE_HANDLED_COLS}
 
 
 def preprocess(df):
@@ -61,5 +64,22 @@ def preprocess(df):
     for col in impute_cols:
         train_median = df_prep.loc[train_mask, col].median()
         df_prep[col] = df_prep[col].fillna(train_median)
+
+    # 4. Standardize continuous numeric features (z-score), fit on the training
+    #    months only. Binary/indicator columns (<= 2 unique values) and constant
+    #    columns are left as-is, along with the excluded columns above.
+    standardize_cols = [
+        c
+        for c in df_prep.select_dtypes(include=np.number).columns
+        if c not in STANDARDIZE_EXCLUDE and df_prep[c].nunique() > 2
+    ]
+    for col in standardize_cols:
+        mean = df_prep.loc[train_mask, col].mean()
+        std = df_prep.loc[train_mask, col].std()
+        if std > 0:
+            df_prep[col] = (df_prep[col] - mean) / std
+
+    # 5. One-hot encode the categorical columns and drop the originals.
+    df_prep = pd.get_dummies(df_prep, columns=CATEGORICAL_COLS, dtype=int)
 
     return df_prep
