@@ -35,8 +35,7 @@ class BaseModel(ABC):
         return self.model.predict_proba(X)[:, 1]
 
     @abstractmethod
-    def shap(self, X):
-        ...
+    def shap(self, X): ...
 
 
 class TreeModel(BaseModel):
@@ -79,7 +78,6 @@ class LogRegModel(LinearModel):
 
     def _build_estimator(self, params):
         return LogisticRegression(**params)
-
 
 
 MODELS = {cls.name: cls for cls in (XGBoostModel, CatBoostModel, LightGBMModel, LogRegModel)}
