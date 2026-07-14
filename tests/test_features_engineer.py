@@ -22,10 +22,11 @@ def test_availability_flags_match_nan_positions():
     assert list(out["is_device_distinct_emails_8w_available"]) == [1, 1, 0]
 
 
-def test_original_columns_dropped_others_kept():
+def test_original_columns_dropped_flags_added():
     out = features_engineer(_df())
     for col in FE_HANDLED_COLS:
-        assert col not in out.columns
+        assert col not in out.columns  # originals are dropped
+        assert f"is_{col}_available" in out.columns
     assert "other" in out.columns
 
 

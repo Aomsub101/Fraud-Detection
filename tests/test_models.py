@@ -6,6 +6,8 @@ from src.models.models import (
     build_model,
     MODELS,
     BaseModel,
+    TreeModel,
+    LinearModel,
     XGBoostModel,
     LogRegModel,
 )
@@ -26,9 +28,17 @@ def test_unknown_model_raises():
         build_model("not_a_model", {})
 
 
-def test_name_property():
-    assert build_model("xgboost", {}).__name__ == "xgboost"
-    assert build_model("log_reg", {}).__name__ == "log_reg"
+def test_name_attribute():
+    assert build_model("xgboost", {}).name == "xgboost"
+    assert build_model("log_reg", {}).name == "log_reg"
+
+
+def test_model_hierarchy():
+    # tree models share the TreeExplainer path, linear models the LinearExplainer.
+    assert issubclass(XGBoostModel, TreeModel)
+    assert issubclass(LogRegModel, LinearModel)
+    assert issubclass(TreeModel, BaseModel)
+    assert issubclass(LinearModel, BaseModel)
 
 
 def test_fit_predict_predict_proba():
