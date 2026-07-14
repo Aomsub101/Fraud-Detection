@@ -25,3 +25,10 @@ dev = [
 
 [tool.ruff]
 line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "slow: slow/integration tests (deselect with -m 'not slow')",
+]

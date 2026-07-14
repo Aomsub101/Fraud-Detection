@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: "3.11"
 
+      # XGBoost/LightGBM wheels dynamically link the OpenMP runtime. It is
+      # normally present on ubuntu-latest, but install it explicitly so the
+      # model tests never fail with "libgomp.so.1: cannot open shared object".
+      - name: Install system libs (OpenMP runtime)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgomp1
+
       - name: Install dependencies
         run: uv sync --locked --all-extras --dev
 
