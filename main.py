@@ -9,11 +9,16 @@ from src.services.load_config import load_config
 from src.services.output_analysis import output_analysis
 from src.services.logging_config import setup_logging
 import logging
+import matplotlib
 
 logger = logging.getLogger(__name__)
 
 
 def main():
+    # Use a non-interactive backend so plots are saved to files without opening
+    # windows or clearing the figure (which had produced blank saved images).
+    matplotlib.use("Agg")
+
     setup_logging()
     logger.info("=== Fraud detection pipeline started ===")
 
