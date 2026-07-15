@@ -1,5 +1,5 @@
 {
-    "model":"xgboost",
+    "model":"log_reg",
     "XGBoost_best_params": {
         "learning_rate": 0.023843774647381494,
         "max_depth": 3,
@@ -27,6 +27,7 @@
         "reg_alpha": 1.2911588901507143
     },
     "LogReg_best_params": {
-        
+        "C": 0.49396906472126056,
+        "class_weight": null
     }
 }
