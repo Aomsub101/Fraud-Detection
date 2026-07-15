@@ -1,33 +1,45 @@
 {
-    "model":"log_reg",
+    "model":"xgboost",
     "XGBoost_best_params": {
-        "learning_rate": 0.023843774647381494,
-        "max_depth": 3,
-        "min_child_weight": 8,
-        "subsample": 0.5851960210919814,
-        "colsample_bytree": 0.643454314374569,
-        "gamma": 2.2224184929501845,
-        "reg_lambda": 1.254770114205877,
-        "reg_alpha": 1.171646368518464
+        "n_estimators": 1372,
+        "learning_rate": 0.011197688724993732, 
+        "max_depth": 3, 
+        "min_child_weight": 10, 
+        "subsample": 0.6097508738062233, 
+        "colsample_bytree": 0.8657630801040974, 
+        "gamma": 0.1735483323349145, 
+        "reg_lambda": 0.1609840456892666, 
+        "reg_alpha": 0.0029444185749029966,
+        "tree_method": "hist",
+        "enable_categorical": true,
+        "eval_metric": "aucpr",
+        "n_jobs": -1,
+        "random_state": 42
     },
-    "CatBoost_best_params": {
-        "learning_rate": 0.08753065673889224,
-        "depth": 4,
-        "l2_leaf_reg": 1.795178350822508,
-        "random_strength": 1.0720659686193552
+        "CatBoost_best_params": {
+        "learning_rate": 0.01795343287611892,
+        "depth": 5,
+        "l2_leaf_reg": 3.6237692198094633,
+        "random_strength": 0.715177711965264,
+        "iterations": 959 ,
+        "random_seed": 42,
+        "verbose": 0
     },
     "LightGBM_best_params": {
-        "learning_rate": 0.08305423817479608,
-        "num_leaves": 103,
-        "max_depth": 9,
-        "min_child_samples": 92,
-        "subsample": 0.6058419519711266,
-        "colsample_bytree": 0.5447960799081857,
-        "reg_lambda": 0.006871128374228537,
-        "reg_alpha": 1.2911588901507143
+        "n_estimators": 558,
+        "learning_rate": 0.024608280355412713,
+        "num_leaves": 115,
+        "max_depth": 4,
+        "min_child_samples": 130,
+        "subsample": 0.5108540511713935,
+        "colsample_bytree": 0.6511590561984508,
+        "reg_lambda": 0.291093035088335,
+        "reg_alpha": 0.031801385805089115,
+        "n_jobs": -1,
+        "random_state":42
     },
     "LogReg_best_params": {
-        "C": 0.49396906472126056,
+        "C": 0.005492809292547693,
         "class_weight": null
     }
 }

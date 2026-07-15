@@ -3,6 +3,7 @@ from src.data.clean_data import clean_data
 from src.data.preprocess import preprocess
 from src.data.data_split import data_split
 from src.features.features_engineer import features_engineer
+from src.features.undersampling import undersampling
 from src.models.models import build_model
 from src.services.metrics import evaluate_model
 from src.services.load_config import load_config
@@ -40,6 +41,9 @@ def main():
     # data split
     X_train, X_test, y_train, y_test = data_split(df_feat)
 
+    # undersampling
+    X_train_und, y_train_und = undersampling(X_train, y_train)
+
     # model
     param_keys = {
         "xgboost": "XGBoost_best_params",
@@ -47,19 +51,13 @@ def main():
         "lightgbm": "LightGBM_best_params",
         "log_reg": "LogReg_best_params",
     }
-    scale_pos_weight = float((y_train == 0).sum() / (y_train == 1).sum())
-    imbalance_params = {
-        "xgboost": {"scale_pos_weight": scale_pos_weight},
-        "catboost": {"scale_pos_weight": scale_pos_weight},
-        "lightgbm": {"scale_pos_weight": scale_pos_weight},
-        "log_reg": {"class_weight": "balanced"},
-    }
+
     model_name = config["model"]
-    params = {**imbalance_params[model_name], **config.get(param_keys[model_name], {})}
+    params = {**config.get(param_keys[model_name], {})}
     model = build_model(name=model_name, params=params)
 
     # train
-    model.fit(X_train, y_train)
+    model.fit(X=X_train_und, y=y_train_und)
 
     # predict
     y_pred = model.predict(X_test)
