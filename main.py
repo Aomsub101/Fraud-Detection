@@ -41,15 +41,15 @@ def main():
     X_train, X_test, y_train, y_test = data_split(df_feat)
 
     # model
-    params = {
-        "xgboost": {},
-        "catboost": {},
-        "lightgbm": {},
-        "log_reg": {},
+    param_keys = {
+        "xgboost": "XGBoost_best_params",
+        "catboost": "CatBoost_best_params",
+        "lightgbm": "LightGBM_best_params",
+        "log_reg": "LogReg_best_params",
     }
-
     model_name = config["model"]
-    model = build_model(name=model_name, params=params[model_name])
+    params = config.get(param_keys[model_name], {})
+    model = build_model(name=model_name, params=params)
 
     # train
     model.fit(X_train, y_train)

@@ -6,8 +6,6 @@ from src.models.models import (
     build_model,
     MODELS,
     BaseModel,
-    TreeModel,
-    LinearModel,
     XGBoostModel,
     LogRegModel,
 )
@@ -33,12 +31,10 @@ def test_name_attribute():
     assert build_model("log_reg", {}).name == "log_reg"
 
 
-def test_model_hierarchy():
-    # tree models share the TreeExplainer path, linear models the LinearExplainer.
-    assert issubclass(XGBoostModel, TreeModel)
-    assert issubclass(LogRegModel, LinearModel)
-    assert issubclass(TreeModel, BaseModel)
-    assert issubclass(LinearModel, BaseModel)
+def test_all_models_subclass_base_and_override_shap():
+    for cls in MODELS.values():
+        assert issubclass(cls, BaseModel)
+        assert cls.shap is not BaseModel.shap  # each model implements its own shap
 
 
 def test_fit_predict_predict_proba():
