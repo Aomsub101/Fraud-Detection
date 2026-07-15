@@ -9,3 +9,5 @@ CLAUDE.md
 output/
 
 catboost_info/
+
+*.png
