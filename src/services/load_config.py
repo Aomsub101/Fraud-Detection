@@ -1,17 +1,12 @@
+import json
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-def load_config(path="config.txt"):
+def load_config(path="config.json"):
     logger.info("Loading config from %s", path)
-    config = {}
     with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if not line or "=" not in line:
-                continue
-            key, value = line.split("=", 1)
-            config[key.strip()] = value.strip()
-    logger.info("Loaded config: %s", config)
+        config = json.load(f)
+    logger.info("Loaded config: model=%s", config.get("model"))
     return config

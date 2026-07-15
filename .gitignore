@@ -7,3 +7,7 @@ __pycache__/
 CLAUDE.md
 
 output/
+
+catboost_info/
+
+*.png

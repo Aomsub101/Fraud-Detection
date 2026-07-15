@@ -9,6 +9,7 @@ def _run(sample_df):
 
 
 def test_final_features_have_no_nan(sample_df):
+    # features_engineer drops the FE-handled columns, so nothing should be NaN.
     X_train, X_test, _, _ = _run(sample_df)
     assert X_train.isna().sum().sum() == 0
     assert X_test.isna().sum().sum() == 0

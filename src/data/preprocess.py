@@ -52,7 +52,7 @@ def preprocess(df):
 
     # 1. Convert -1 missing sentinels to NaN so they are not treated as values.
     for col in MISSING_SENTINEL_COLS:
-        df_prep[col] = df_prep[col].mask(df_prep[col] == -1)
+        df_prep[col] = df_prep[col].replace(-1, np.nan)
 
     # 2. Log-transform. log1p keeps NaN as NaN and maps 0 -> 0.
     for col in LOG_COLS:

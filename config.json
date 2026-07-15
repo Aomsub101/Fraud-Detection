@@ -1,0 +1,33 @@
+{
+    "model":"log_reg",
+    "XGBoost_best_params": {
+        "learning_rate": 0.023843774647381494,
+        "max_depth": 3,
+        "min_child_weight": 8,
+        "subsample": 0.5851960210919814,
+        "colsample_bytree": 0.643454314374569,
+        "gamma": 2.2224184929501845,
+        "reg_lambda": 1.254770114205877,
+        "reg_alpha": 1.171646368518464
+    },
+    "CatBoost_best_params": {
+        "learning_rate": 0.08753065673889224,
+        "depth": 4,
+        "l2_leaf_reg": 1.795178350822508,
+        "random_strength": 1.0720659686193552
+    },
+    "LightGBM_best_params": {
+        "learning_rate": 0.08305423817479608,
+        "num_leaves": 103,
+        "max_depth": 9,
+        "min_child_samples": 92,
+        "subsample": 0.6058419519711266,
+        "colsample_bytree": 0.5447960799081857,
+        "reg_lambda": 0.006871128374228537,
+        "reg_alpha": 1.2911588901507143
+    },
+    "LogReg_best_params": {
+        "C": 0.49396906472126056,
+        "class_weight": null
+    }
+}

@@ -11,34 +11,34 @@ OUTPUT_PATH = "output/"
 
 
 def save_shap(model, X_test):
-    logger.info("Saving SHAP summary plot for %s", model.__name__)
+    logger.info("Saving SHAP summary plot for %s", model.name)
     feature_names = X_test.columns
 
     # shap
     shap_values = model.shap(X_test)
     shap.summary_plot(shap_values, X_test, feature_names=feature_names, show=False)
     plt.tight_layout()
-    plt.savefig(OUTPUT_PATH + f"shap_plot[{model.__name__}].png", dpi=300, bbox_inches="tight")
+    plt.savefig(OUTPUT_PATH + f"shap_plot[{model.name}].png", dpi=300, bbox_inches="tight")
     plt.close()
 
 
 def save_json(model, metrics):
-    logger.info("Saving metrics for %s: %s", model.__name__, metrics)
-    with open(OUTPUT_PATH + f"metrics[{model.__name__}].json", "w") as file:
+    logger.info("Saving metrics for %s: %s", model.name, metrics)
+    with open(OUTPUT_PATH + f"metrics[{model.name}].json", "w") as file:
         json.dump(metrics, file, indent=4)
 
 
 def save_pr_auc(model, y_test, y_score):
-    logger.info("Saving PR curve for %s", model.__name__)
+    logger.info("Saving PR curve for %s", model.name)
     disp = PrecisionRecallDisplay.from_predictions(y_test, y_score)
-    disp.ax_.set_title(f"PR Curve (Estimator) [{model.__name__}]")
+    disp.ax_.set_title(f"PR Curve (Estimator) [{model.name}]")
     plt.tight_layout()
-    plt.savefig(OUTPUT_PATH + f"pr_curve[{model.__name__}].png", dpi=300, bbox_inches="tight")
+    plt.savefig(OUTPUT_PATH + f"pr_curve[{model.name}].png", dpi=300, bbox_inches="tight")
     plt.close()
 
 
 def output_analysis(model, metrics, X_test, y_test, y_score):
-    logger.info("Running output analysis for %s", model.__name__)
+    logger.info("Running output analysis for %s", model.name)
     os.makedirs("output", exist_ok=True)
     save_shap(model, X_test)
     save_json(model, metrics)

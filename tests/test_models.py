@@ -26,9 +26,15 @@ def test_unknown_model_raises():
         build_model("not_a_model", {})
 
 
-def test_name_property():
-    assert build_model("xgboost", {}).__name__ == "xgboost"
-    assert build_model("log_reg", {}).__name__ == "log_reg"
+def test_name_attribute():
+    assert build_model("xgboost", {}).name == "xgboost"
+    assert build_model("log_reg", {}).name == "log_reg"
+
+
+def test_all_models_subclass_base_and_override_shap():
+    for cls in MODELS.values():
+        assert issubclass(cls, BaseModel)
+        assert cls.shap is not BaseModel.shap  # each model implements its own shap
 
 
 def test_fit_predict_predict_proba():

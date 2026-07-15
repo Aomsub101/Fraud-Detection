@@ -9,7 +9,7 @@ def test_keys_and_basic_values():
     y_pred = [0, 1, 1, 0]  # tp=1, fp=1, fn=1, tn=1
     y_score = [0.1, 0.4, 0.9, 0.3]
     m = evaluate_model(y_true, y_pred, y_score)
-    assert set(m) == {"precision", "recall", "f1_score", "pr_auc"}
+    assert set(m) == {"precision", "recall", "f1_score", "pr_auc", "recall@5fpr"}
     assert m["precision"] == pytest.approx(0.5)
     assert m["recall"] == pytest.approx(0.5)
     assert m["f1_score"] == pytest.approx(0.5)
@@ -27,6 +27,16 @@ def test_pr_auc_uses_scores_not_labels():
     ap_labels = average_precision_score(y_true, y_pred)
     assert m["pr_auc"] == pytest.approx(ap_scores)
     assert ap_scores != pytest.approx(ap_labels)  # the distinction actually matters
+
+
+def test_recall_at_5fpr_perfect_separation():
+    # scores rank both frauds above both legits -> recall is 1.0 even at 0% FPR.
+    y_true = [0, 0, 1, 1]
+    y_pred = [0, 0, 1, 1]
+    y_score = [0.1, 0.2, 0.8, 0.9]
+    m = evaluate_model(y_true, y_pred, y_score)
+    assert m["recall@5fpr"] == pytest.approx(1.0)
+    assert 0.0 <= m["recall@5fpr"] <= 1.0
 
 
 def test_zero_division_returns_zero_not_crash():
