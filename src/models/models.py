@@ -20,6 +20,31 @@ class BaseModel(ABC):
     def _build_estimator(self, params):
         """Return the underlying estimator"""
 
+    @abstractmethod
+    def fit(self, X, y):
+        logger.info("Training %s on %d samples", self.name, len(X))
+        self.model.fit(X, y)
+        logger.info("Finished training %s", self.name)
+        return self
+
+    @abstractmethod
+    def predict(self, X):
+        logger.info("Predicting labels with %s on %d samples", self.name, len(X))
+        return self.model.predict(X)
+
+    @abstractmethod
+    def predict_proba(self, X):
+        logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
+        return self.model.predict_proba(X)[:, 1]
+
+    @abstractmethod
+    def shap(self, X):
+        ...
+
+
+class XGBoostModel(BaseModel):
+    name = "xgboost"
+
     def fit(self, X, y):
         logger.info("Training %s on %d samples", self.name, len(X))
         self.model.fit(X, y)
@@ -34,47 +59,68 @@ class BaseModel(ABC):
         logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
         return self.model.predict_proba(X)[:, 1]
 
-    @abstractmethod
-    def shap(self, X): ...
-
-
-class TreeModel(BaseModel):
-    def shap(self, X):
-        logger.info("Computing SHAP values for %s", self.name)
-        explainer = shap.TreeExplainer(self.model)
-        return explainer.shap_values(X)
-
-
-class LinearModel(BaseModel):
-    def shap(self, X):
-        logger.info("Computing SHAP values for %s", self.name)
-        explainer = shap.LinearExplainer(self.model, X)
-        return explainer.shap_values(X)
-
-
-class XGBoostModel(TreeModel):
-    name = "xgboost"
-
     def _build_estimator(self, params):
         return XGBClassifier(**params)
 
 
-class CatBoostModel(TreeModel):
+class CatBoostModel(BaseModel):
     name = "catboost"
+
+    def fit(self, X, y):
+        logger.info("Training %s on %d samples", self.name, len(X))
+        self.model.fit(X, y)
+        logger.info("Finished training %s", self.name)
+        return self
+
+    def predict(self, X):
+        logger.info("Predicting labels with %s on %d samples", self.name, len(X))
+        return self.model.predict(X)
+
+    def predict_proba(self, X):
+        logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
+        return self.model.predict_proba(X)[:, 1]
 
     def _build_estimator(self, params):
         return CatBoostClassifier(**params)
 
 
-class LightGBMModel(TreeModel):
+class LightGBMModel(BaseModel):
     name = "lightgbm"
+
+    def fit(self, X, y):
+        logger.info("Training %s on %d samples", self.name, len(X))
+        self.model.fit(X, y)
+        logger.info("Finished training %s", self.name)
+        return self
+
+    def predict(self, X):
+        logger.info("Predicting labels with %s on %d samples", self.name, len(X))
+        return self.model.predict(X)
+
+    def predict_proba(self, X):
+        logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
+        return self.model.predict_proba(X)[:, 1]
 
     def _build_estimator(self, params):
         return LGBMClassifier(**params)
 
 
-class LogRegModel(LinearModel):
+class LogRegModel(BaseModel):
     name = "log_reg"
+
+    def fit(self, X, y):
+        logger.info("Training %s on %d samples", self.name, len(X))
+        self.model.fit(X, y)
+        logger.info("Finished training %s", self.name)
+        return self
+
+    def predict(self, X):
+        logger.info("Predicting labels with %s on %d samples", self.name, len(X))
+        return self.model.predict(X)
+
+    def predict_proba(self, X):
+        logger.info("Predicting probabilities with %s on %d samples", self.name, len(X))
+        return self.model.predict_proba(X)[:, 1]
 
     def _build_estimator(self, params):
         return LogisticRegression(**params)
