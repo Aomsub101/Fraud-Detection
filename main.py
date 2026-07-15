@@ -40,8 +40,7 @@ def main():
     # data split
     X_train, X_test, y_train, y_test = data_split(df_feat)
 
-    # model — start from the imbalance-handling defaults, then layer the tuned
-    # params from config.json on top (config wins if it sets the same key).
+    # model
     param_keys = {
         "xgboost": "XGBoost_best_params",
         "catboost": "CatBoost_best_params",
