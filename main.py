@@ -68,6 +68,8 @@ def main():
 
     output_analysis(model, metrics=metrics, X_test=X_test, y_test=y_test, y_score=y_score)
 
+    model.save()
+
     logger.info("=== Pipeline complete ===")
 
 

@@ -5,8 +5,10 @@ from sklearn.linear_model import LogisticRegression
 from abc import ABC, abstractmethod
 import logging
 import shap
+import joblib
 
 logger = logging.getLogger(__name__)
+OUTPUT_PATH = "output/"
 
 
 class BaseModel(ABC):
@@ -36,6 +38,9 @@ class BaseModel(ABC):
     def shap(self, X):
         ...
 
+    @abstractmethod
+    def save(self):
+        ...
 
 class XGBoostModel(BaseModel):
     name = "xgboost"
@@ -61,6 +66,11 @@ class XGBoostModel(BaseModel):
         logger.info("Computing SHAP values for %s", self.name)
         explainer = shap.TreeExplainer(self.model)
         return explainer.shap_values(X)
+    
+    def save(self):
+        logger.info("Saving model %s", self.name)
+        self.model.save_model(OUTPUT_PATH + "xgboost.json")
+        logger.info("Saving done")
 
 class CatBoostModel(BaseModel):
     name = "catboost"
@@ -87,6 +97,11 @@ class CatBoostModel(BaseModel):
         explainer = shap.TreeExplainer(self.model)
         return explainer.shap_values(X)
 
+    def save(self):
+        logger.info("Saving model %s", self.name)
+        self.model.save_model(OUTPUT_PATH + "catboost.cbm")
+        logger.info("Saving done")
+
 class LightGBMModel(BaseModel):
     name = "lightgbm"
 
@@ -112,6 +127,11 @@ class LightGBMModel(BaseModel):
         explainer = shap.TreeExplainer(self.model)
         return explainer.shap_values(X)
 
+    def save(self):
+        logger.info("Saving model %s", self.name)
+        self.model.booster_.save_model(OUTPUT_PATH + "lightgbm.txt")
+        logger.info("Saving done")
+
 class LogRegModel(BaseModel):
     name = "log_reg"
 
@@ -136,6 +156,11 @@ class LogRegModel(BaseModel):
         logger.info("Computing SHAP values for %s", self.name)
         explainer = shap.LinearExplainer(self.model, X)
         return explainer.shap_values(X)
+
+    def save(self):
+        logger.info("Saving model %s", self.name)
+        joblib.dump(self.model, OUTPUT_PATH + "log_reg.joblib")
+        logger.info("Saving done")
 
 
 MODELS = {cls.name: cls for cls in (XGBoostModel, CatBoostModel, LightGBMModel, LogRegModel)}
