@@ -20,27 +20,27 @@ class BaseModel(ABC):
 
     @abstractmethod
     def _build_estimator(self, params):
-        ...
+        raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
     def fit(self, X, y):
-        ...
+        raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
     def predict(self, X):
-        ...
+        raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
     def predict_proba(self, X):
-        ...
+        raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
     def shap(self, X):
-        ...
+        raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
     def save(self):
-        ...
+        raise NotImplementedError("This method should be overridden by subclasses.")
 
 class XGBoostModel(BaseModel):
     name = "xgboost"
